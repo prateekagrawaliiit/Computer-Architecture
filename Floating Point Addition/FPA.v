@@ -10,6 +10,8 @@ module top;
     wire [31:0]A,B;
     Swap SW(I1,I2,A,B); //First step check whether A > B and swap accordingly
 
+    // split the numbers in sign, exponent and mantissa.
+
     wire S1,S2;
     wire [7:0] E1,E2; //exponents
     wire [22:0] M1,M2; //mantissas
@@ -17,20 +19,26 @@ module top;
     Split SP1(A,S1,E1,M1);
     Split SP2(B,S2,E2,M2);
 
-    wire  [7:0]Ediff;
+    // exponent difference
+
+    wire  [7:0] Ediff;
     assign Ediff = E1 - E2;
+
+
+    // To handle denormal numbers 
+
 
     wire [31:0] N1,N2,N3;
     assign N1 = {|E1,M1};   
     assign N2 = {|E2,M2};   
 
-    BarrelShift BS(N2,Ediff,N3);
+    BarrelShift BS(N2,Ediff,N3);  
     wire [31:0]N4;
     assign N4 = {32{S1^S2}}^N3;
 
     wire [31:0]Sum;
     wire Carry;
-    RDA C1(N1,N4,S1^S2,Sum,Carry);
+    RDA C1(N1,N4,S1^S2,Sum,Carry); 
 
     reg [22:0] M3,tmp;
     reg [7:0] E3;
@@ -48,7 +56,7 @@ module top;
         else if(Sum[23]==0)
         begin
             i = 1;
-            while(Sum[23-i] == 1'b0)
+            while(Sum[23-i] == 1'b0)        
             begin
                 i = i+1;
             end 
@@ -64,16 +72,32 @@ module top;
     end
 
     reg [31:0]out;
-    always @ (E3 or M3)
+    always @*
     begin
-        out = {S1,{8{|Sum}} & E3,M3}; //combining the final answers to ieee-754 rep
+    // Case for infinity
+        if(&E1 == 1'b1 && |M1 == 1'b0)
+            out = {S1,{8{1'b1}},23'b0};
+        //Handles normal + NaN 
+        else 
+            out = {S1,{8{|Sum}} & E3,M3}; // reduction or for 0 case
     end
 
     //Testbench
     initial
     begin
-        #0 I1={1'b0,{8'b10000001},23'b10000000000000000000000}; I2={1'b0,{8'b10000010},23'b00000000000000000000000};
+
+        // 6 + 8 = 14
+        #0  I1={1'b0,{8'b10000001},23'b10000000000000000000000}; I2={1'b0,{8'b10000010},23'b00000000000000000000000};
+
+        // 9.75 + 0.5625 = 10.3125
         #10 I1={1'b0,{8'b10000010},23'b00111000000000000000000}; I2={1'b0,{8'b01111110},23'b00100000000000000000000};
+
+        // -6 + -8 = 14
+        #20 I1={1'b1,{8'b10000001},23'b10000000000000000000000}; I2={1'b1,{8'b10000010},23'b00000000000000000000000};
+
+        // -6 + 8 = 2
+        #30 I1={1'b1,{8'b10000001},23'b10000000000000000000000}; I2={1'b0,{8'b10000010},23'b00000000000000000000000};
+
     end
     initial
     begin
