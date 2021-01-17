@@ -1,7 +1,7 @@
-`include "tools/swap.v"
-`include "tools/shift.v"
-`include "tools/rda.v"
-`include "tools/split.v"
+`include "Tools/check.v"
+`include "Tools/shift.v"
+`include "Adder/32bit_RDA.v"
+`include "Tools/split.v"
 
 //LINK FOR CONVERSION -- https://www.h-schmidt.net/FloatConverter/IEEE754.html
 
@@ -11,7 +11,7 @@ module top;
     wire [31:0]Big,Small;
 
     //----------------------------------------------------------------------------------SWAP
-    Swap c(Exp1,Exp2,Big,Small); //SORT BIGGER AND SMALLER EXPRESSIONS
+    Check c(Exp1,Exp2,Big,Small); //SORT BIGGER AND SMALLER EXPRESSIONS
 
     wire S1,S2;         //SIGNS
     wire [7:0] E1,E2;   //EXPONENTS
@@ -62,7 +62,7 @@ module top;
         else
             N5= N4+ 1;
 	end
-    RDA a1(Sum,N1,N5);
+    adder a1(Sum,N1,N5);
 
     //-----------------------------------------------------------------------------------NORMALISE
 	reg [22:0] M3,Temp_Mantissa;
