@@ -17,7 +17,7 @@ module barrel_logicalLeft(Inp,S,out);
 
 	input[22:0] Inp;      //23-bit Input line 
 	input[4:0] S;       //5 bit Shift magnitude
-	output[22:0] out;   //8-bit Output line 
+	output[22:0] out;   //23-bit Output line 
 
 	wire s1_1, s1_2, s1_3, s1_4, s1_5, s1_6, s1_7, s1_8, s1_9, s1_10, s1_11, s1_12, s1_13, s1_14, s1_15, s1_16, s1_17, s1_18, s1_19, s1_20, s1_21, s1_22, s1_23;
 	wire s2_1, s2_2, s2_3, s2_4, s2_5, s2_6, s2_7, s2_8, s2_9, s2_10, s2_11, s2_12, s2_13, s2_14, s2_15, s2_16, s2_17, s2_18, s2_19, s2_20, s2_21, s2_22, s2_23;
