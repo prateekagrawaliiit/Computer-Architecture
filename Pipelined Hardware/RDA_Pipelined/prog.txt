@@ -1,0 +1,4 @@
+there is a problem in ppc_str.v in clocking ...that is transferring from x to register to wire ...the one commented
+else the output is working 
+estimated with clock output at sec 9
+else expected at sec 1
