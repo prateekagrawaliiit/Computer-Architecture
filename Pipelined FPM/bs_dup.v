@@ -8,6 +8,9 @@ endmodule
 
 
 
+
+
+
 module mux21(input [9:1] exp_c,input [32:1] a,input [32:1] b,output [9:1] exp_cs);
 
 wire [9:1]exp_c2,sel;
@@ -58,8 +61,6 @@ module mux23(input [65:1] man_c,input [32:1] a,input [32:1] b,output [65:1] man_
 wire [65:1]t1,t2,t3,t4,t5,t6,sel,sel2,man_c2,man_c3;
 wire s,s2;
 
-
-// If any one of them is not zero (NaN case or Infinity)
 assign s=(a[23:1]!=0 || b[23:1]!=0);
 assign sel={65{s}};
 
@@ -68,24 +69,18 @@ assign man_c3={65{1'b0}};
 
 assign t1=sel & man_c2;
 assign t2=man_c3 & (~sel);
-assign t3=t1|t2;                //check whether the mantissa is 0 or not
-
-
+assign t3=t1|t2;
 
 assign s2=( ((a[31:24]==255 && a[23:1]!=0) || (b[31:24]==255 && b[23:1]!=0)) || ((a[31:24]==255 && a[23:1]==0) || (b[31:24]==255 && b[23:1]==0)));
 assign sel2={65{s2}};
 
-// Special case
 assign t4=sel2 & t3;
-
-//Normal Case
 assign t5=man_c &(~sel2);
 assign t6=t4 | t5;
 
 assign man_cs=t6;
 
 endmodule
-
 
 
 

@@ -47,22 +47,21 @@ begin
     r_EXP_c=exp_a2+exp_b2-127;
 end
 
+
 //module multiplies mantissa of a and b
 wallace m1(w_MAN_c,w_MAN_a2,w_MAN_b2,a2,b2,r_EXP_c,sign_c,clk,rst ,a3,b3,w_EXP_c3,sign_c3 );                                              
+
+
+    // Exponent
 
     mux22 m2(w_MAN_c[48],w_EXP_c3,w_EXP_cs);            //increment exp if 48th bit is set to 1
     // add 1 to exp 
 
-
     mux21 m3(w_EXP_cs,a3,b3,w_EXP_cs2);                 //if exponent is greater than 255 or 255 ,exp will be set to 255 i.e set all exp to 8b1
     
 
-
-
+    // Manitssas
     mux23 m4(w_MAN_c,a3,b3,w_MAN_cs);                   //to handle special cases like nan or infinity (mantissa)
-
-
-
 
     mux24 m5(w_MAN_c[48],w_MAN_cs,w_EXP_cs2,a3,b3,c);   //to handle a special case where either of the input is zero
 

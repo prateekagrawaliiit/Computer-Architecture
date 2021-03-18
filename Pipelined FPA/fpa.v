@@ -92,7 +92,7 @@ begin
     while(r_MAN_c[i]==0)        //find the difference to be shifted to normalize again incase of denormalized sum
         i=i-1;
 
-    if(i>24)
+    if(i>24)  //{}
     begin
     if(w_MAN_a==32'h0080_0000 && w_MAN_b==32'h0080_0000 && sum[25]!=1)        // incase of sum of mantissa being 0
         i=0;
@@ -102,7 +102,6 @@ begin
     
     if((a[31:24]==8'd0 && a[23:1]!=0) || (b[31:24]==8'd0 && b[23:1]!=0))  
     begin
-        r_MAN_c=r_MAN_c;
         if(sum>=32'h0180_0000)      //subnormal sum check
             i=i+1;
     end
@@ -145,7 +144,6 @@ fpa f1(a,b,rst,clk,c);
 integer i;
 initial
 begin
-
     #0  a=32'b01000000000000000000000000000000; b=32'b01000001001000000000000000000000;     //2 + 12    @12
     #10 a=32'b01000100000101011100000000000000; b=32'b01000001001000000000000000000000;     //10 + 599  @20
     #10 a=32'b01000100011110100000000000000000; b=32'b01000111110000110100111110000000;     //1000 + 99999 @32
