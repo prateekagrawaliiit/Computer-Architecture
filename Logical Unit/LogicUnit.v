@@ -6,14 +6,29 @@ module LogicUnit(input [2:0] operation,
     wire [31:0]cmp;
     twocmp tc (A,cmp);
 
-    assign Out = ~(|operation[2:0])?A & B:32'bz;                                  //000 AND
-    assign Out = (operation[0] & ~(|operation[2:1]))?A ^ B:32'bz;                 //001 XOR
-    assign Out = (operation[1] & ~operation[0] & ~operation[2])?~(A & B):32'bz;   //010 NAND
-    assign Out = (~operation[2] & (&operation[1:0]))?A|B:32'bz;                   //011 OR
-    assign Out = (operation[2] & ~(|operation[1:0]))?~A:32'bz;                    //100 NOT
-    assign Out = (operation[2] & ~operation[1] & operation[0])?~(A|B):32'bz;      //101 NOR
-    assign Out = &operation[2:1] & ~operation[0]?cmp:32'bz;                       //110 2s COMPLEMENT
-    assign Out = (&operation[2:0])? ~(A ^ B):32'bz;                               //111 XNOR
+    //000 AND
+    assign Out = ~(|operation[2:0])?A & B:32'bz;
+
+    //001 XOR                               
+    assign Out = (operation[0] & ~(|operation[2:1]))?A ^ B:32'bz;
+
+    //010 NAND                 
+    assign Out = (operation[1] & ~operation[0] & ~operation[2])?~(A & B):32'bz;
+
+    //011 OR
+    assign Out = (~operation[2] & (&operation[1:0]))?A|B:32'bz;  
+
+    //100 NOT                 
+    assign Out = (operation[2] & ~(|operation[1:0]))?~A:32'bz;
+
+    //101 NOR                    
+    assign Out = (operation[2] & ~operation[1] & operation[0])?~(A|B):32'bz;
+
+    //110 2s COMPLEMENT     
+    assign Out = &operation[2:1] & ~operation[0]?cmp:32'bz;
+    
+    //111 XNOR                        
+    assign Out = (&operation[2:0])? ~(A ^ B):32'bz;                               
     
 endmodule
 
